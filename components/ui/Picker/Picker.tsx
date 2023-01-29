@@ -1,87 +1,90 @@
-import { ReactNode } from 'react'
+import React, { ReactNode, useState } from 'react'
 import cx from 'classnames'
-
-import { Details, useDetails, Text, Dropdown, Box } from '@primer/react'
+import { ActionMenu, Box, Details, Text, useDetails } from '@primer/react'
 import { ChevronDownIcon } from '@primer/octicons-react'
+import { AnchorAlignment } from '@primer/behaviors'
 
-export type PickerOptionsTypeT = {
-  text: string
-  item: ReactNode
-  selected?: boolean
-}
+import { Fields } from './Fields'
 
-export type PickerPropsT = {
-  variant?: 'inline'
+interface Props {
+  variant: 'inline' | 'header'
+  items: PickerItem[]
+  onSelect?: (item: PickerItem) => void
+  buttonBorder?: boolean
+  pickerLabel?: string
+  dataTestId: string
   defaultText: string
-  options: Array<PickerOptionsTypeT>
+  ariaLabel: string
+  alignment: AnchorAlignment
+  renderItem?: (item: PickerItem) => ReactNode | string
 }
 
-type PickerWrapperPropsT = {
-  variant?: 'inline'
-  children: ReactNode
-}
-
-function PickerSummaryWrapper({ variant, children }: PickerWrapperPropsT) {
-  if (variant === 'inline') {
-    return (
-      <div className="d-flex flex-items-center flex-justify-between">
-        {children}
-        <ChevronDownIcon size={24} className="arrow ml-md-1" />
-      </div>
-    )
+export interface PickerItem {
+  href: string
+  text: string
+  selected: boolean
+  extra?: {
+    [key: string]: any
   }
-  return (
-    <>
-      {children}
-      <ChevronDownIcon size={16} className="arrow ml-md-1" />
-    </>
-  )
 }
 
-function PickerOptionsWrapper({ variant, children }: PickerWrapperPropsT) {
-  if (variant === 'inline') {
-    return (
-      <Box py="2">
-        <ul>{children}</ul>
-      </Box>
-    )
-  }
-  return (
-    <Dropdown.Menu direction="sw" style={{ width: 'unset' }}>
-      {children}
-    </Dropdown.Menu>
-  )
-}
+export const Picker = ({
+  variant,
+  items,
+  ariaLabel,
+  pickerLabel,
+  dataTestId,
+  defaultText,
+  onSelect,
+  buttonBorder,
+  alignment,
+  renderItem,
+}: Props) => {
+  const [open, setOpen] = useState(false)
+  const { getDetailsProps } = useDetails({ closeOnOutsideClick: true })
+  const selectedOption = items.find((item) => item.selected === true)
 
-export function Picker({ variant, defaultText, options, ...restProps }: PickerPropsT) {
-  const { getDetailsProps, setOpen } = useDetails({ closeOnOutsideClick: true })
-  const selectedOption = options.find((option) => option.selected)
-
-  return (
-    <Details
-      {...getDetailsProps()}
-      className={cx(
-        'position-relative details-reset',
-        variant === 'inline' ? 'd-block' : 'd-inline-block'
-      )}
-      {...restProps}
-    >
+  return variant === 'inline' ? (
+    <Details {...getDetailsProps()} className={cx('position-relative details-reset', 'd-block')}>
       <summary
         className="d-block btn btn-invisible color-fg-default"
         aria-haspopup="true"
         aria-label={selectedOption?.text || defaultText}
       >
-        <PickerSummaryWrapper variant={variant}>
+        <div className="d-flex flex-items-center flex-justify-between">
           <Text>{selectedOption?.text || defaultText}</Text>
-        </PickerSummaryWrapper>
+          <ChevronDownIcon size={24} className="arrow ml-md-1" />
+        </div>
       </summary>
-      <PickerOptionsWrapper variant={variant}>
-        {options.map((option) => (
-          <Dropdown.Item onClick={() => setOpen(false)} key={option.text}>
-            {option.item}
-          </Dropdown.Item>
-        ))}
-      </PickerOptionsWrapper>
+      <Box>
+        <Fields
+          open={open}
+          setOpen={setOpen}
+          items={items}
+          onSelect={onSelect}
+          renderItem={renderItem}
+        />
+      </Box>
     </Details>
+  ) : (
+    <ActionMenu open={open} onOpenChange={setOpen}>
+      <ActionMenu.Button
+        aria-label={ariaLabel}
+        variant={buttonBorder ? 'default' : 'invisible'}
+        sx={{ color: `var(--color-fg-default)`, width: '100%' }}
+      >
+        {pickerLabel && <span style={{ fontWeight: 'normal' }}>{`${pickerLabel}: `}</span>}
+        <span data-testid={dataTestId}>{selectedOption?.text || defaultText}</span>
+      </ActionMenu.Button>
+      <ActionMenu.Overlay width="auto" align={alignment}>
+        <Fields
+          open={open}
+          setOpen={setOpen}
+          items={items}
+          onSelect={onSelect}
+          renderItem={renderItem}
+        />
+      </ActionMenu.Overlay>
+    </ActionMenu>
   )
 }

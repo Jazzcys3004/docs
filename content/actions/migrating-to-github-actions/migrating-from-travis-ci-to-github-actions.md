@@ -43,13 +43,13 @@ To give you control over when CI tasks are executed, a {% data variables.product
 
 Travis CI and {% data variables.product.prodname_actions %} both use YAML to create jobs and workflows, and these files are stored in the code's repository. For more information on how {% data variables.product.prodname_actions %} uses YAML, see ["Creating a workflow file](/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow)."
 
-### Custom environment variables
+### Custom variables
 
-Travis CI lets you set environment variables and share them between stages. Similarly, {% data variables.product.prodname_actions %} lets you define environment variables for a step, job, or workflow. For more information, see ["Environment variables](/actions/reference/environment-variables)."
+Travis CI lets you set variables and share them between stages. Similarly, {% data variables.product.prodname_actions %} lets you define variables for a workflows. For more information, see "[Variables](/actions/learn-github-actions/variables)."
 
-### Default environment variables
+### Default variables
 
-Travis CI and {% data variables.product.prodname_actions %} both include default environment variables that you can use in your YAML files. For {% data variables.product.prodname_actions %}, you can see these listed in "[Default environment variables](/actions/reference/environment-variables#default-environment-variables)."
+Travis CI and {% data variables.product.prodname_actions %} both include default environment variables that you can use in your YAML files. For {% data variables.product.prodname_actions %}, you can see these listed in "[Default environment variables](/actions/learn-github-actions/variables#default-environment-variables)."
 
 ### Parallel job processing
 
@@ -60,9 +60,9 @@ Travis CI can use `stages` to run jobs in parallel. Similarly, {% data variables
 Travis CI and {% data variables.product.prodname_actions %} both support status badges, which let you indicate whether a build is passing or failing.
 For more information, see ["Adding a workflow status badge to your repository](/actions/managing-workflow-runs/adding-a-workflow-status-badge)."
 
-### Using a build matrix
+### Using a matrix
 
-Travis CI and {% data variables.product.prodname_actions %} both support a build matrix, allowing you to perform testing using combinations of operating systems and software packages. For more information, see "[Using a build matrix](/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix)."
+Travis CI and {% data variables.product.prodname_actions %} both support a matrix, allowing you to perform testing using combinations of operating systems and software packages. For more information, see "[Using a matrix for your jobs](/actions/using-jobs/using-a-matrix-for-your-jobs)."
 
 Below is an example comparing the syntax for each system:
 
@@ -178,7 +178,7 @@ git:
 
 ### Using environment variables in a matrix
 
-Travis CI and {% data variables.product.prodname_actions %} can both add custom environment variables to a test matrix, which allows you to refer to the variable in a later step.
+Travis CI and {% data variables.product.prodname_actions %} can both add custom variables to a test matrix, which allows you to refer to the variable in a later step.
 
 In {% data variables.product.prodname_actions %}, you can use the `include` key to add custom environment variables to a matrix. {% data reusables.actions.matrix-variable-example %}
 
@@ -209,7 +209,8 @@ The concurrent jobs and workflow execution times in {% data variables.product.pr
 ### Using different languages in {% data variables.product.prodname_actions %}
 
 When working with different languages in {% data variables.product.prodname_actions %}, you can create a step in your job to set up your language dependencies. For more information about working with a particular language, see the specific guide:
-  - [Building and testing Node.js or Python](/actions/guides/building-and-testing-nodejs-or-python)
+  - [Building and testing Node.js](/actions/guides/building-and-testing-nodejs)
+  - [Building and testing Python](/actions/guides/building-and-testing-python)
   - [Building and testing PowerShell](/actions/guides/building-and-testing-powershell)
   - [Building and testing Java with Maven](/actions/guides/building-and-testing-java-with-maven)
   - [Building and testing Java with Gradle](/actions/guides/building-and-testing-java-with-gradle)
@@ -303,7 +304,11 @@ jobs:
 
 ## Caching dependencies
 
-Travis CI and {% data variables.product.prodname_actions %} let you manually cache dependencies for later reuse. This example demonstrates the cache syntax for each system.
+Travis CI and {% data variables.product.prodname_actions %} let you manually cache dependencies for later reuse.
+
+{% ifversion actions-caching %}
+
+This example demonstrates the cache syntax for each system.
 
 <table>
 <tr>
@@ -338,7 +343,11 @@ cache: npm
 </tr>
 </table>
 
-{% data variables.product.prodname_actions %} caching is only applicable for repositories hosted on {% data variables.product.prodname_dotcom_the_website %}. For more information, see "<a href="/actions/guides/caching-dependencies-to-speed-up-workflows" class="dotcom-only">Caching dependencies to speed up workflows</a>."
+{% else %}
+
+{% data reusables.actions.caching-availability %}
+
+{% endif %}
 
 ## Examples of common tasks
 

@@ -28,10 +28,16 @@ shortTitle: Delete organization
 
 {% ifversion not ghes %} After you delete an organization, {% data variables.product.company_short %} **cannot restore your content**. Therefore, before{% else %}Before{% endif %} you delete your organization, make sure you have a copy of all repositories, wikis, issues, and project boards from the account.
 
+{% note %}
+
+**Note:** {% data reusables.package_registry.delete-account-namespace-retirement %}
+
+{% endnote %}
+
 {% ifversion ghes %}
 {% note %}
 
-**Note:** If necessary, a site administrator for {% data variables.product.product_location %} may be able to partially restore a deleted organization. For more information, see "[Restoring a deleted organization](/admin/user-management/managing-organizations-in-your-enterprise/restoring-a-deleted-organization)."
+**Note:** If necessary, a site administrator for {% data variables.location.product_location %} may be able to partially restore a deleted organization. For more information, see "[Restoring a deleted organization](/admin/user-management/managing-organizations-in-your-enterprise/restoring-a-deleted-organization)."
 
 {% endnote %}
 {% endif %}

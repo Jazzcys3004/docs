@@ -15,7 +15,7 @@ topics:
   - GitHub search
 shortTitle: Search for repositories
 ---
-You can search for repositories globally across all of {% data variables.product.product_location %}, or search for repositories within a particular organization. For more information, see "[About searching on {% data variables.product.prodname_dotcom %}](/search-github/getting-started-with-searching-on-github/about-searching-on-github)."
+You can search for repositories globally across all of {% data variables.location.product_location %}, or search for repositories within a particular organization. For more information, see "[About searching on {% data variables.product.prodname_dotcom %}](/search-github/getting-started-with-searching-on-github/about-searching-on-github)."
 
 To include forks in the search results, you will need to add `fork:true` or `fork:only` to your query. For more information, see "[Searching in forks](/search-github/searching-on-github/searching-in-forks)."
 
@@ -23,12 +23,13 @@ To include forks in the search results, you will need to add `fork:true` or `for
 
 ## Search by repository name, description, or contents of the README file
 
-With the `in` qualifier you can restrict your search to the repository name, repository description, contents of the README file, or any combination of these. When you omit this qualifier, only the repository name and description are searched.
+With the `in` qualifier you can restrict your search to the repository name, repository description, repository topics, contents of the README file, or any combination of these. When you omit this qualifier, only the repository name, description, and topics are searched.
 
 | Qualifier  | Example
 | ------------- | -------------
 | `in:name` | [**jquery in:name**](https://github.com/search?q=jquery+in%3Aname&type=Repositories) matches repositories with "jquery" in the repository name.
 | `in:description`  | [**jquery in:name,description**](https://github.com/search?q=jquery+in%3Aname%2Cdescription&type=Repositories) matches repositories with "jquery" in the repository name or description.
+| `in:topics`  | [**jquery in:topics**](https://github.com/search?q=jquery+in%3Atopics&type=Repositories) matches repositories labeled with "jquery" as a topic.
 | `in:readme` | [**jquery in:readme**](https://github.com/search?q=jquery+in%3Areadme&type=Repositories) matches repositories mentioning "jquery" in the repository's README file.
 | `repo:owner/name` | [**repo:octocat/hello-world**](https://github.com/search?q=repo%3Aoctocat%2Fhello-world) matches a specific repository name.
 
@@ -89,7 +90,7 @@ You can search repositories based on the number of stars the repositories have, 
 | Qualifier  | Example
 | ------------- | -------------
 | <code>stars:<em>n</em></code> | [**stars:500**](https://github.com/search?utf8=%E2%9C%93&q=stars%3A500&type=Repositories) matches repositories with exactly 500 stars.
-| | [**stars:10..20**](https://github.com/search?q=stars%3A10..20+size%3A%3C1000&type=Repositories) matches repositories 10 to 20 stars, that are smaller than 1000 KB.
+| | [**stars:10..20 size:<1000**](https://github.com/search?q=stars%3A10..20+size%3A%3C1000&type=Repositories) matches repositories 10 to 20 stars, that are smaller than 1000 KB.
 | | [**stars:&gt;=500 fork:true language:php**](https://github.com/search?q=stars%3A%3E%3D500+fork%3Atrue+language%3Aphp&type=Repositories) matches repositories with the at least 500 stars, including forked ones, that are written in PHP.
 
 ## Search by when a repository was created or last updated
@@ -165,6 +166,15 @@ You can search repositories based on whether the repositories are mirrors and ho
 |  `mirror:false` | [**mirror:false GNOME**](https://github.com/search?utf8=%E2%9C%93&q=mirror%3Afalse+GNOME&type=) matches repositories that are not mirrors and contain the word "GNOME."
 
 {% endif %}
+
+## Search based on whether a repository is a template
+
+You can search repositories based on whether the repositories are templates. For more information, see "[Creating a template repository](/repositories/creating-and-managing-repositories/creating-a-template-repository)".
+
+| Qualifier  | Example
+| ------------- | -------------
+| `template:true` | [**template:true GNOME**](https://github.com/search?utf8=%E2%9C%93&q=template%3Atrue+GNOME&type=) matches repositories that are templates and contain the word "GNOME".
+| `template:false` | [**template:false GNOME**](https://github.com/search?utf8=%E2%9C%93&q=template%3Afalse+GNOME&type=) matches repositories that are not templates and contain the word "GNOME".
 
 ## Search based on whether a repository is archived
 

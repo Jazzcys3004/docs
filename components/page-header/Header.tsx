@@ -2,32 +2,38 @@ import { useEffect, useState } from 'react'
 import cx from 'classnames'
 import { useRouter } from 'next/router'
 import { MarkGithubIcon, ThreeBarsIcon, XIcon } from '@primer/octicons-react'
-import { useVersion } from 'components/hooks/useVersion'
+import { DEFAULT_VERSION, useVersion } from 'components/hooks/useVersion'
 
 import { Link } from 'components/Link'
 import { useMainContext } from 'components/context/MainContext'
+import { useHasAccount } from 'components/hooks/useHasAccount'
 import { LanguagePicker } from './LanguagePicker'
 import { HeaderNotifications } from 'components/page-header/HeaderNotifications'
 import { ProductPicker } from 'components/page-header/ProductPicker'
+import { ApiVersionPicker } from 'components/sidebar/ApiVersionPicker'
 import { useTranslation } from 'components/hooks/useTranslation'
 import { Search } from 'components/Search'
+import { BasicSearch } from 'components/BasicSearch'
 import { VersionPicker } from 'components/page-header/VersionPicker'
 import { Breadcrumbs } from './Breadcrumbs'
+
 import styles from './Header.module.scss'
 
 export const Header = () => {
   const router = useRouter()
-  const { isDotComAuthenticated, relativePath, error } = useMainContext()
+  const { error } = useMainContext()
+  const { currentProduct, allVersions } = useMainContext()
   const { currentVersion } = useVersion()
   const { t } = useTranslation(['header', 'homepage'])
+  const isRestPage = currentProduct && currentProduct.id === 'rest'
   const [isMenuOpen, setIsMenuOpen] = useState(
     router.pathname !== '/' && router.query.query && true
   )
   const [scroll, setScroll] = useState(false)
-
+  const { hasAccount } = useHasAccount()
   const signupCTAVisible =
-    !isDotComAuthenticated &&
-    (currentVersion === 'free-pro-team@latest' || currentVersion === 'enterprise-cloud@latest')
+    hasAccount === false && // don't show if `null`
+    (currentVersion === DEFAULT_VERSION || currentVersion === 'enterprise-cloud@latest')
 
   useEffect(() => {
     function onScroll() {
@@ -49,6 +55,15 @@ export const Header = () => {
     return () => window.removeEventListener('keydown', close)
   }, [])
 
+  // If you're on `/pt/search` the `router.asPath` will be `/search`
+  // but `/pt/search` is just shorthand for `/pt/free-pro-team@latest/search`
+  // so we need to make exception to that.
+  const onSearchResultPage =
+    currentVersion === DEFAULT_VERSION
+      ? router.asPath.split('?')[0] === '/search'
+      : router.asPath.split('?')[0] === `/${currentVersion}/search`
+  const SearchComponent = onSearchResultPage ? BasicSearch : Search
+
   return (
     <div
       className={cx(
@@ -60,7 +75,8 @@ export const Header = () => {
       <header
         className={cx(
           'color-bg-default px-3 px-md-6 pt-3 pb-3 position-sticky top-0 z-3 border-bottom',
-          scroll && 'color-shadow-small'
+          scroll && 'color-shadow-small',
+          styles.fullVerticalScroll
         )}
       >
         {/* desktop header */}
@@ -75,11 +91,8 @@ export const Header = () => {
             <Breadcrumbs />
           </div>
           <div className="d-flex flex-items-center">
-            <div className="mr-2">
-              <VersionPicker />
-            </div>
-
-            <LanguagePicker />
+            <VersionPicker variant="header" />
+            <LanguagePicker variant="header" />
 
             {signupCTAVisible && (
               <a
@@ -93,9 +106,9 @@ export const Header = () => {
             )}
 
             {/* <!-- GitHub.com homepage and 404 page has a stylized search; Enterprise homepages do not --> */}
-            {relativePath !== 'index.md' && error !== '404' && (
+            {error !== '404' && (
               <div className="d-inline-block ml-3">
-                <Search iconSize={16} isHeaderSearch={true} />
+                <SearchComponent iconSize={16} isHeaderSearch={true} />
               </div>
             )}
           </div>
@@ -146,6 +159,11 @@ export const Header = () => {
 
               <div className="border-top my-2" />
               <LanguagePicker variant="inline" />
+
+              {isRestPage && allVersions[currentVersion].apiVersions.length > 0 && (
+                <ApiVersionPicker variant="inline" />
+              )}
+
               {signupCTAVisible && (
                 <a
                   href="https://github.com/signup?ref_cta=Sign+up&ref_loc=docs+header&ref_page=docs"
@@ -158,9 +176,9 @@ export const Header = () => {
               )}
 
               {/* <!-- GitHub.com homepage and 404 page has a stylized search; Enterprise homepages do not --> */}
-              {relativePath !== 'index.md' && error !== '404' && (
+              {error !== '404' && (
                 <div className="my-2 pt-2">
-                  <Search iconSize={16} isMobileSearch={true} />
+                  <SearchComponent iconSize={16} isMobileSearch={true} />
                 </div>
               )}
             </div>

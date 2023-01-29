@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 import { SidebarNav } from 'components/sidebar/SidebarNav'
 import { Header } from 'components/page-header/Header'
@@ -9,7 +10,9 @@ import { DeprecationBanner } from 'components/page-header/DeprecationBanner'
 import { RestBanner } from 'components/page-header/RestBanner'
 import { useMainContext } from 'components/context/MainContext'
 import { useTranslation } from 'components/hooks/useTranslation'
-import { useRouter } from 'next/router'
+import { Breadcrumbs } from 'components/page-header/Breadcrumbs'
+
+const MINIMAL_RENDER = Boolean(JSON.parse(process.env.MINIMAL_RENDER || 'false'))
 
 type Props = { children?: React.ReactNode }
 export const DefaultLayout = (props: Props) => {
@@ -27,6 +30,31 @@ export const DefaultLayout = (props: Props) => {
   const { t } = useTranslation(['errors', 'meta', 'scroll_button'])
   const router = useRouter()
   const metaDescription = page.introPlainText ? page.introPlainText : t('default_description')
+
+  // This is only true when we do search indexing which renders every page
+  // just to be able to `cheerio` load the main body (and the meta
+  // keywords tag).
+  if (MINIMAL_RENDER) {
+    return (
+      <div>
+        <Head>
+          <title>{page.fullTitle}</title>
+          {/* For local site search indexing */}
+          {page.topics.length > 0 && <meta name="keywords" content={page.topics.join(',')} />}
+        </Head>
+
+        {/* For local site search indexing */}
+        <div data-search="breadcrumbs">
+          <Breadcrumbs />
+        </div>
+
+        <main id="main-content" style={{ scrollMarginTop: '5rem' }}>
+          {props.children}
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div className="d-lg-flex">
       <Head>
@@ -88,10 +116,7 @@ export const DefaultLayout = (props: Props) => {
       <SidebarNav />
       {/* Need to set an explicit height for sticky elements since we also
           set overflow to auto */}
-      <div
-        className="flex-column flex-1 overflow-auto print-overflow-visible"
-        style={{ height: '100vh' }}
-      >
+      <div className="flex-column flex-1">
         <Header />
         <main id="main-content" style={{ scrollMarginTop: '5rem' }}>
           <DeprecationBanner />
@@ -103,7 +128,7 @@ export const DefaultLayout = (props: Props) => {
           <SupportSection />
           <SmallFooter />
           <ScrollButton
-            className="position-fixed bottom-0 mb-4 right-0 mr-4"
+            className="position-fixed bottom-0 mb-4 right-0 mr-4 z-1"
             ariaLabel={t('scroll_to_top')}
           />
         </footer>

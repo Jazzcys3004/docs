@@ -301,13 +301,15 @@ For more information, see "[Events that trigger workflows](/actions/reference/ev
 
 ## Variables and secrets
 
-GitLab CI/CD and {% data variables.product.prodname_actions %} support setting environment variables in the pipeline or workflow configuration file, and creating secrets using the GitLab or {% data variables.product.product_name %} UI.
+GitLab CI/CD and {% data variables.product.prodname_actions %} support setting variables in the pipeline or workflow configuration file, and creating secrets using the GitLab or {% data variables.product.product_name %} UI.
 
-For more information, see "[Environment variables](/actions/reference/environment-variables)" and "[Encrypted secrets](/actions/reference/encrypted-secrets)."
+For more information, see "[Variables](/actions/learn-github-actions/variables)" and "[Encrypted secrets](/actions/reference/encrypted-secrets)."
 
 ## Caching
 
 GitLab CI/CD and {% data variables.product.prodname_actions %} provide a method in the configuration file to manually cache workflow files.
+
+{% ifversion actions-caching %}
 
 Below is an example of the syntax for each system:
 
@@ -359,7 +361,11 @@ jobs:
 </tr>
 </table>
 
-{% data variables.product.prodname_actions %} caching is only applicable for repositories hosted on {% data variables.product.prodname_dotcom_the_website %}. For more information, see "<a href="/actions/guides/caching-dependencies-to-speed-up-workflows" class="dotcom-only">Caching dependencies to speed up workflows</a>."
+{% else %}
+
+{% data reusables.actions.caching-availability %}
+
+{% endif %}
 
 ## Artifacts
 

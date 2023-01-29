@@ -1,14 +1,13 @@
 import { useRouter } from 'next/router'
 import { ArrowRightIcon, InfoIcon } from '@primer/octicons-react'
 
-import { Link } from 'components/Link'
 import { useMainContext } from 'components/context/MainContext'
 import { DEFAULT_VERSION, useVersion } from 'components/hooks/useVersion'
 import { useTranslation } from 'components/hooks/useTranslation'
 import { Picker } from 'components/ui/Picker'
 
 type Props = {
-  variant?: 'inline'
+  variant: 'inline' | 'header'
 }
 
 export const VersionPicker = ({ variant }: Props) => {
@@ -22,10 +21,15 @@ export const VersionPicker = ({ variant }: Props) => {
   }
 
   const allLinks = (page.permalinks || []).map((permalink) => ({
-    text: permalink.pageVersionTitle,
-    selected: allVersions[currentVersion].versionTitle === permalink.pageVersionTitle,
-    item: <Link href={permalink.href}>{permalink.pageVersionTitle}</Link>,
+    text: allVersions[permalink.pageVersion].versionTitle,
+    selected: currentVersion === permalink.pageVersion,
+    href: permalink.href,
+    extra: {
+      arrow: false,
+      info: false,
+    },
   }))
+
   const hasEnterpriseVersions = (page.permalinks || []).some((permalink) =>
     permalink.pageVersion.startsWith('enterprise-server')
   )
@@ -34,15 +38,11 @@ export const VersionPicker = ({ variant }: Props) => {
     allLinks.push({
       text: t('all_enterprise_releases'),
       selected: false,
-      item: (
-        <Link
-          href={`/${router.locale}/${enterpriseServerVersions[0]}/admin/all-releases`}
-          className="f6 no-underline"
-        >
-          {t('all_enterprise_releases')}{' '}
-          <ArrowRightIcon verticalAlign="middle" size={15} className="mr-2" />
-        </Link>
-      ),
+      href: `/${router.locale}/${enterpriseServerVersions[0]}/admin/all-releases`,
+      extra: {
+        arrow: true,
+        info: false,
+      },
     })
   }
 
@@ -52,23 +52,35 @@ export const VersionPicker = ({ variant }: Props) => {
     allLinks.push({
       text: t('about_versions'),
       selected: false,
-      item: (
-        <Link
-          href={`/${router.locale}${currentVersionPathSegment}/get-started/learning-about-github/about-versions-of-github-docs`}
-          className="f6 no-underline"
-        >
-          {t('about_versions')} <InfoIcon verticalAlign="middle" size={15} className="mr-2" />
-        </Link>
-      ),
+      href: `/${router.locale}${currentVersionPathSegment}/get-started/learning-about-github/about-versions-of-github-docs`,
+      extra: {
+        arrow: false,
+        info: true,
+      },
     })
   }
 
   return (
-    <Picker
-      variant={variant}
-      data-testid="version-picker"
-      defaultText={t('version_picker_default_text')}
-      options={allLinks}
-    />
+    <div data-testid="version-picker">
+      <Picker
+        variant={variant}
+        defaultText={t('version_picker_default_text')}
+        items={allLinks}
+        alignment="end"
+        dataTestId="field"
+        ariaLabel="Select field type"
+        renderItem={(item) => {
+          return (
+            <div className={item.extra?.arrow || item.extra?.info ? 'f6' : undefined}>
+              {item.text}
+              {item.extra?.arrow && (
+                <ArrowRightIcon verticalAlign="middle" size={15} className="ml-1" />
+              )}
+              {item.extra?.info && <InfoIcon verticalAlign="middle" size={15} className="ml-1" />}
+            </div>
+          )
+        }}
+      />
+    </div>
   )
 }

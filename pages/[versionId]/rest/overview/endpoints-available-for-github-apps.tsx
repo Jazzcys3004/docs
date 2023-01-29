@@ -1,18 +1,21 @@
 import { GetServerSideProps } from 'next'
 import { Fragment } from 'react'
 import { useRouter } from 'next/router'
+
+import { AutomatedPage } from 'components/article/AutomatedPage'
+import {
+  AutomatedPageContext,
+  AutomatedPageContextT,
+  getAutomatedPageContextFromRequest,
+} from 'components/context/AutomatedPageContext'
 import { MainContextT, MainContext, getMainContext } from 'components/context/MainContext'
 import { Link } from 'components/Link'
-import { getEnabledForApps } from 'lib/rest/index.js'
-import { ArticlePage } from 'components/article/ArticlePage'
-import {
-  ArticleContext,
-  ArticleContextT,
-  getArticleContextFromRequest,
-} from 'components/context/ArticleContext'
+import { RestRedirect } from 'components/RestRedirect'
+import { getEnabledForApps, categoriesWithoutSubcategories } from 'lib/rest/index.js'
 
 type OperationT = {
   slug: string
+  subcategory: string
   verb: string
   requestPath: string
 }
@@ -21,32 +24,46 @@ type EnabledAppCategoryT = {
   [category: string]: OperationT[]
 }
 
-type AppDataT = {
-  [version: string]: EnabledAppCategoryT
-}
-
-let enabledForApps: AppDataT | null = null
-
 type Props = {
   mainContext: MainContextT
+  currentVersion: string
   enabledForApps: EnabledAppCategoryT
-  articleContext: ArticleContextT
+  automatedPageContext: AutomatedPageContextT
+  categoriesWithoutSubcategories: string[]
 }
 
-export default function Category({ mainContext, enabledForApps, articleContext }: Props) {
+export default function Category({
+  mainContext,
+  currentVersion,
+  enabledForApps,
+  automatedPageContext,
+  categoriesWithoutSubcategories,
+}: Props) {
   const { locale } = useRouter()
 
   const content = Object.entries(enabledForApps).map(([category, operations]) => (
     <Fragment key={category}>
       {operations.length > 0 && (
         <h3 id={category}>
-          <Link href={`/${locale}/rest/reference/${category}`}>{category}</Link>
+          <Link
+            href={`/${locale}${
+              currentVersion === 'free-pro-team@latest' ? '' : '/' + currentVersion
+            }/rest/${category}`}
+          >
+            {category}
+          </Link>
         </h3>
       )}
       <ul>
-        {operations.map((operation) => (
-          <li key={`enabledAppOperation-${operation.slug}`}>
-            <Link href={`/${locale}/rest/reference/${category}#${operation.slug}`}>
+        {operations.map((operation, index) => (
+          <li key={`enabledAppOperation-${operation.slug}-${index}`}>
+            <Link
+              href={`/${locale}${
+                currentVersion === 'free-pro-team@latest' ? '' : '/' + currentVersion
+              }/rest/${category}${
+                categoriesWithoutSubcategories.includes(category) ? '' : '/' + operation.subcategory
+              }#${operation.slug}`}
+            >
               <code>
                 <span className="text-uppercase">{operation.verb}</span> {operation.requestPath}
               </code>
@@ -59,9 +76,10 @@ export default function Category({ mainContext, enabledForApps, articleContext }
 
   return (
     <MainContext.Provider value={mainContext}>
-      <ArticleContext.Provider value={articleContext}>
-        <ArticlePage>{content}</ArticlePage>
-      </ArticleContext.Provider>
+      <AutomatedPageContext.Provider value={automatedPageContext}>
+        <RestRedirect />
+        <AutomatedPage>{content}</AutomatedPage>
+      </AutomatedPageContext.Provider>
     </MainContext.Provider>
   )
 }
@@ -69,18 +87,28 @@ export default function Category({ mainContext, enabledForApps, articleContext }
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
   const req = context.req as object
   const res = context.res as object
+  const mainContext = await getMainContext(req, res)
   const currentVersion = context.query.versionId as string
-  const mainContext = getMainContext(req, res)
+  const apiVersion =
+    context.query.apiVersion || mainContext.allVersions[currentVersion].latestApiVersion
+  const automatedPageContext = getAutomatedPageContextFromRequest(req)
+  const enabledForApps = await getEnabledForApps(currentVersion, apiVersion)
 
+  // If getEnabledForApps came back as undefined, it means that nothing
+  // could be found for that `apiVersion`
   if (!enabledForApps) {
-    enabledForApps = (await getEnabledForApps()) as AppDataT
+    return {
+      notFound: true,
+    }
   }
 
   return {
     props: {
       mainContext,
-      enabledForApps: enabledForApps[currentVersion],
-      articleContext: getArticleContextFromRequest(req),
+      currentVersion,
+      enabledForApps,
+      automatedPageContext,
+      categoriesWithoutSubcategories,
     },
   }
 }

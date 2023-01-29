@@ -14,7 +14,7 @@ You can navigate, search, and run commands on {% data variables.product.product_
 
 ### Fast navigation
 
-When you open the command palette, the suggestions are optimized to give you easy access from anywhere in a repository, user account, or organization to top-level pages like the Issues page. If the location you want isn't listed, start entering the name or number for the location to refine the suggestions.
+When you open the command palette, the suggestions are optimized to give you easy access from anywhere in a repository, personal account, or organization to top-level pages like the Issues page. If the location you want isn't listed, start entering the name or number for the location to refine the suggestions.
 
 ![Command palette repository suggestions](/assets/images/help/command-palette/command-palette-navigation-repo-default.png)
 
@@ -39,8 +39,8 @@ When you open the command palette, it shows your location at the top left and us
 {% note %}
 
 **Notes:**
-- If you are editing Markdown text, open the command palette with <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>K</kbd> (Windows and Linux) or <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>K</kbd> (Mac).
-- If you are working on a project (beta), a project-specific command palette is displayed instead. For more information, see "[Customizing your project (beta) views](/issues/trying-out-the-new-projects-experience/customizing-your-project-views)."
+- If you are editing Markdown text, open the command palette with <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>K</kbd> (Windows and Linux) or <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>K</kbd> (Mac).{% ifversion projects-v2 %}
+- If you are working on a {% data variables.projects.project_v2 %}, a project-specific command palette is displayed instead. For more information, see "[Customizing a view](/issues/planning-and-tracking-with-projects/customizing-views-in-your-project/customizing-a-view)."{% endif %}
 
 {% endnote %}
 
@@ -70,7 +70,7 @@ You can use the command palette to navigate to any page that you have access to 
 
 ## Searching with the {% data variables.product.prodname_command_palette %}
 
-You can use the command palette to search for anything on {% data variables.product.product_location %}.
+You can use the command palette to search for anything on {% data variables.location.product_location %}.
 
 {% data reusables.command-palette.open-palette %}
 
@@ -139,7 +139,7 @@ These keystrokes are available when the command palette is in navigation and sea
 |<kbd>!</kbd>| Search just for projects. For more information, see "[Searching with the {% data variables.product.prodname_command_palette %}](#searching-with-the-github-command-palette)."|
 |<kbd>Ctrl</kbd>+<kbd>C</kbd> or <kbd>Command</kbd>+<kbd>C</kbd>| Copy the search or navigation URL for the highlighted result to the clipboard.|
 |<kbd>Enter</kbd>| Jump to the highlighted result or run the highlighted command.|
-|<kbd>Ctrl</kbd>+<kbd>Enter</kbd> or <kbd>Command</kbd>+<kbd>Enter</kbd>| Open the highlighted search or navigation result in a new brower tab.|
+|<kbd>Ctrl</kbd>+<kbd>Enter</kbd> or <kbd>Command</kbd>+<kbd>Enter</kbd>| Open the highlighted search or navigation result in a new browser tab.|
 |<kbd>?</kbd>| Display help within the command palette.|
 
 ### Global commands
@@ -151,9 +151,9 @@ These commands are available from all scopes.
 |`Import repository`|Create a new repository by importing a project from another version control system. For more information, see "[Importing a repository with GitHub importer](/get-started/importing-your-projects-to-github/importing-source-code-to-github/importing-a-repository-with-github-importer)."  |
 |`New gist`|Open a new gist. For more information, see "[Creating a gist](/get-started/writing-on-github/editing-and-sharing-content-with-gists/creating-gists)." |
 |`New organization`|Create a new organization. For more information, see "[Creating a new organization from scratch](/organizations/collaborating-with-groups-in-organizations/creating-a-new-organization-from-scratch)." |
-|`New project`|Create a new project board. For more information, see "[Creating a project](/issues/trying-out-the-new-projects-experience/creating-a-project)."  |
+|`New project`|Create a new project board. For more information, see "[Creating a project](/issues/planning-and-tracking-with-projects/creating-projects/creating-a-project)."  |
 |`New repository`|Create a new repository from scratch. For more information, see "[Creating a new repository](/repositories/creating-and-managing-repositories/creating-a-new-repository)." |
-|`Switch theme to <theme name>`|Change directly to a different theme for the UI. For more information, see "[Managing your theme settings](/account-and-profile/setting-up-and-managing-your-github-user-account/managing-user-account-settings/managing-your-theme-settings)." |
+|`Switch theme to <theme name>`|Change directly to a different theme for the UI. For more information, see "[Managing your theme settings](/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-personal-account-settings/managing-your-theme-settings)." |
 
 
 ### Organization commands
@@ -174,8 +174,8 @@ Most of these commands are available only on the home page of the repository. If
 |`New discussion`|Create a new discussion in the repository. For more information, see "[Creating a new discussion](/discussions/quickstart#creating-a-new-discussion)."|
 |`New file`|Create a new file from any page in the repository. For more information, see "[Adding a file to a repository](/repositories/working-with-files/managing-files/adding-a-file-to-a-repository)."
 |`New issue`|Open a new issue from any page in the repository. For more information, see "[Creating an issue](/issues/tracking-your-work-with-issues/creating-an-issue)."|
-|`Open in new codespace`|Create and open a codespace for this repository. For more information, see "[Creating a codespace](/codespaces/developing-in-codespaces/creating-a-codespace)."|
-|`Open in github.dev editor`|Open the current repository in the github.dev editor. For more information, see "[Opening the web based editor](/codespaces/the-githubdev-web-based-editor#opening-the-web-based-editor)."|
+|`Open in new codespace`|Create and open a codespace for this repository. For more information, see "[Creating a codespace for a repository](/codespaces/developing-in-codespaces/creating-a-codespace-for-a-repository)."|
+|`Open in {% data variables.codespaces.serverless %} editor`|Open the current repository in the {% data variables.codespaces.serverless %} editor. For more information, see "[The {% data variables.codespaces.serverless %} web-based editor](/codespaces/the-githubdev-web-based-editor#opening-the-web-based-editor)."|
 
 ### File commands
 
@@ -184,7 +184,7 @@ These commands are available only when you open the command palette from a file 
 | Command | Behavior|
 | :- | :- |
 |`Copy permalink`|Create a link to the file that includes the current commit SHA and copy the link to the clipboard. For more information, see "[Getting permanent links to files](/repositories/working-with-files/using-files/getting-permanent-links-to-files#press-y-to-permalink-to-a-file-in-a-specific-commit)."
-|`Open in github.dev editor`|Open the currently displayed file in github.dev editor. For more information, see "[Opening the web based editor](/codespaces/the-githubdev-web-based-editor#opening-the-web-based-editor)."|
+|`Open in {% data variables.codespaces.serverless %} editor`|Open the currently displayed file in {% data variables.codespaces.serverless %} editor. For more information, see "[The {% data variables.codespaces.serverless %} web-based editor](/codespaces/the-githubdev-web-based-editor#opening-the-web-based-editor)."|
 
 ### Discussion commands
 
@@ -192,10 +192,10 @@ These commands are available only when you open the command palette from a discu
 
 | Command | Behavior|
 | :- | :- |
-|`Delete discussion...`|Permanently delete the discussion. For more information, see "[Managing discussions in your repository](/discussions/managing-discussions-for-your-community/managing-discussions-in-your-repository#deleting-a-discussion)."
+|`Delete discussion...`|Permanently delete the discussion. For more information, see "[Managing discussions](/discussions/managing-discussions-for-your-community/managing-discussions#deleting-a-discussion)."
 |`Edit discussion body`|Open the main body of the discussion ready for editing.
 |`Subscribe`/`unsubscribe`|Opt in or out of notifications for additions to the discussion. For more information, see "[About notifications](/account-and-profile/managing-subscriptions-and-notifications-on-github/setting-up-notifications/about-notifications)."
-|`Transfer discussion...`|Move the discussion to a different repository. For more information, see "[Managing discussions in your repository](/discussions/managing-discussions-for-your-community/managing-discussions-in-your-repository#transferring-a-discussion)."
+|`Transfer discussion...`|Move the discussion to a different repository. For more information, see "[Managing discussions](/discussions/managing-discussions-for-your-community/managing-discussions#transferring-a-discussion)."
 
 ### Issue commands
 
@@ -224,6 +224,6 @@ These commands are available only when you open the command palette from a pull 
 |`Copy current branch name`| Add the name of the head branch for the pull request to the clipboard.
 |`Edit pull request body`|Open the main body of the pull request ready for editing.
 |`Edit pull request title`|Open the title of the pull request ready for editing.
-|`Open in new codespace`|Create and open a codespace for the head branch of the pull request. For more information, see "[Creating a codespace](/codespaces/developing-in-codespaces/creating-a-codespace)."
+|`Open in new codespace`|Create and open a codespace for the head branch of the pull request. For more information, see "[Creating a codespace for a repository](/codespaces/developing-in-codespaces/creating-a-codespace-for-a-repository)."
 |`Subscribe`/`unsubscribe`|Opt in or out of notifications for changes to this pull request. For more information, see "[About notifications](/account-and-profile/managing-subscriptions-and-notifications-on-github/setting-up-notifications/about-notifications)."
 |`Update current branch`|Update the head branch of the pull request with changes from the base branch. This is available only for pull requests that target the default branch of the repository. For more information, see "[About branches](/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches)."|

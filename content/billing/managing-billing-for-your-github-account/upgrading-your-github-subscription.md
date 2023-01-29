@@ -1,6 +1,6 @@
 ---
 title: Upgrading your GitHub subscription
-intro: 'You can upgrade the subscription for any type of account on {% data variables.product.product_location %} at any time.'
+intro: 'You can upgrade the subscription for any type of account on {% data variables.location.product_location %} at any time.'
 miniTocMaxHeadingLevel: 3
 redirect_from:
   - /github/setting-up-and-managing-billing-and-payments-on-github/upgrading-your-github-subscription
@@ -40,7 +40,7 @@ When you upgrade the subscription for an account, the upgrade changes the paid f
 
 ## Upgrading your personal account's subscription
 
-You can upgrade your personal account from {% data variables.product.prodname_free_user %} to {% data variables.product.prodname_pro %} to get advanced code review tools on private repositories owned by your user account. Upgrading your personal account does not affect any organizations you may manage or repositories owned by those organizations. {% data reusables.gated-features.more-info %}
+You can upgrade your personal account from {% data variables.product.prodname_free_user %} to {% data variables.product.prodname_pro %} to get advanced code review tools on private repositories owned by your personal account. Upgrading your personal account does not affect any organizations you may manage or repositories owned by those organizations. {% data reusables.gated-features.more-info %}
 
 {% data reusables.user-settings.access_settings %}
 {% data reusables.user-settings.billing_plans %}

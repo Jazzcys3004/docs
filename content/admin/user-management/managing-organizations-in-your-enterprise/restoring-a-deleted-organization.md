@@ -1,6 +1,6 @@
 ---
 title: Restoring a deleted organization
-intro: "You can partially restore an organization that was previously deleted on {% data variables.product.product_location %}."
+intro: 'You can partially restore an organization that was previously deleted on {% data variables.location.product_location %}.'
 versions:
   ghes: '*'
 type: how_to
@@ -9,12 +9,12 @@ topics:
   - Enterprise
   - Organizations
 shortTitle: Restore organization
-permissions: Site administers can restore an organization on {% data variables.product.product_name %}.
+permissions: 'Site administers can restore an organization on {% data variables.product.product_name %}.'
 ---
 
 ## About organization restoration
 
-You can use the site admin dashboard to restore an organization that was previously deleted on {% data variables.product.product_location %}, as long as the audit log Elasticsearch indices contain the data for the `org.delete` event.
+You can use the site admin dashboard to restore an organization that was previously deleted on {% data variables.location.product_location %}, as long as the audit log Elasticsearch indices contain the data for the `org.delete` event.
 
 Immediately after you restore an organization, the organization will not be exactly the same as it was prior to the deletion. You'll have to manually restore any repositories that were owned by the organization. For more information, see "[Restoring a deleted repository](/admin/user-management/managing-repositories-in-your-enterprise/restoring-a-deleted-repository)."
 

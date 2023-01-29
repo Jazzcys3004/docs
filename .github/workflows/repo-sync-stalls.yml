@@ -7,7 +7,7 @@ name: Repo Sync Stalls
 on:
   workflow_dispatch:
   schedule:
-    - cron: '32 */2 * * *' # At minute 32 past every 2nd hour.
+    - cron: '20 */2 * * *' # Run every 2nd hour at 20 minutes after
 
 permissions:
   pull-requests: read
@@ -52,7 +52,7 @@ jobs:
               }
             })
       - name: Send Slack notification if workflow fails
-        uses: someimportantcompany/github-actions-slack-message@f8d28715e7b8a4717047d23f48c39827cacad340
+        uses: someimportantcompany/github-actions-slack-message@1d367080235edfa53df415bd8e0bbab480f29bad
         if: ${{ failure() }}
         with:
           channel: ${{ secrets.DOCS_ALERTS_SLACK_CHANNEL_ID }}

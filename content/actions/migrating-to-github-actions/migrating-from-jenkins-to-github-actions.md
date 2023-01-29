@@ -82,9 +82,9 @@ Jenkins can run the `stages` and `steps` in parallel, while {% data variables.pr
 | ------------- | ------------- |
 | [`parallel`](https://jenkins.io/doc/book/pipeline/syntax/#parallel) | [`jobs.<job_id>.strategy.max-parallel`](/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idstrategymax-parallel) |
 
-### Build matrix
+### Matrix
 
-Both {% data variables.product.prodname_actions %} and Jenkins let you use a build matrix to define various system combinations.
+Both {% data variables.product.prodname_actions %} and Jenkins let you use a matrix to define various system combinations.
 
 | Jenkins       | {% data variables.product.prodname_actions %} |
 | ------------- | ------------- |
@@ -96,9 +96,9 @@ Both {% data variables.product.prodname_actions %} and Jenkins let you use a bui
 
 Jenkins groups `steps` together in `stages`. Each of these steps can be a script, function, or command, among others. Similarly, {% data variables.product.prodname_actions %} uses `jobs` to execute specific groups of `steps`.
 
-| Jenkins steps | {% data variables.product.prodname_actions %} |
+| Jenkins       | {% data variables.product.prodname_actions %} |
 | ------------- | ------------- |
-| [`script`](https://jenkins.io/doc/book/pipeline/syntax/#script) | [`jobs.<job_id>.steps`](/actions/reference/workflow-syntax-for-github-actions#jobsjob_idsteps) |
+| [`steps`](https://jenkins.io/doc/book/pipeline/syntax/#steps) | [`jobs.<job_id>.steps`](/actions/reference/workflow-syntax-for-github-actions#jobsjob_idsteps) |
 
 ## Examples of common tasks
 

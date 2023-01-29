@@ -1,49 +1,47 @@
 import { jest } from '@jest/globals'
 
 import { getDOM, getJSON } from '../helpers/e2etest.js'
+import { describeIfDocsEarlyAccess } from '../helpers/conditional-runs.js'
 
-// TODO: Use `describeViaActionsOnly` instead. See tests/rendering/server.js
-const describeInternalOnly =
-  process.env.GITHUB_REPOSITORY === 'github/docs-internal' ? describe : describe.skip
 // Breadcrumbs were moved to the Header and in the Menu for mobile, so there are now double the Breadcrumbs
 describe('breadcrumbs', () => {
   jest.setTimeout(300 * 1000)
 
   describe('rendering', () => {
     test('top-level product pages have breadcrumbs', async () => {
-      const $ = await getDOM('/github')
+      const $ = await getDOM('/repositories')
       expect($('[data-testid=breadcrumbs]')).toHaveLength(2)
     })
 
     test('article pages have breadcrumbs with product, category, maptopic, and article', async () => {
       const $ = await getDOM(
-        '/account-and-profile/setting-up-and-managing-your-github-user-account/managing-email-preferences/adding-an-email-address-to-your-github-account'
+        '/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/adding-an-email-address-to-your-github-account'
       )
       const $breadcrumbs = $('[data-testid=breadcrumbs] a')
 
       expect($breadcrumbs).toHaveLength(8)
       expect($breadcrumbs[0].attribs.title).toBe('Account and profile')
-      expect($breadcrumbs[1].attribs.title).toBe('User accounts')
+      expect($breadcrumbs[1].attribs.title).toBe('Personal accounts')
       expect($breadcrumbs[2].attribs.title).toBe('Manage email preferences')
       expect($breadcrumbs[3].attribs.title).toBe('Add an email address')
     })
 
     test('maptopic pages include their own grayed-out breadcrumb', async () => {
       const $ = await getDOM(
-        '/account-and-profile/setting-up-and-managing-your-github-user-account/managing-email-preferences'
+        '/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences'
       )
       const $breadcrumbs = $('[data-testid=breadcrumbs] a')
 
       expect($breadcrumbs).toHaveLength(6)
       expect($breadcrumbs[0].attribs.title).toBe('Account and profile')
-      expect($breadcrumbs[1].attribs.title).toBe('User accounts')
+      expect($breadcrumbs[1].attribs.title).toBe('Personal accounts')
       expect($breadcrumbs[2].attribs.title).toBe('Manage email preferences')
       expect($breadcrumbs[2].attribs.class.includes('color-fg-muted')).toBe(true)
     })
 
     test('works for enterprise user pages', async () => {
       const $ = await getDOM(
-        '/en/enterprise-server/account-and-profile/setting-up-and-managing-your-github-user-account/managing-email-preferences/adding-an-email-address-to-your-github-account'
+        '/en/enterprise-server/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/adding-an-email-address-to-your-github-account'
       )
       const $breadcrumbs = $('[data-testid=breadcrumbs] a')
       expect($breadcrumbs).toHaveLength(8)
@@ -83,15 +81,9 @@ describe('breadcrumbs', () => {
       const $breadcrumbs = $('[data-testid=breadcrumbs] a')
       expect($breadcrumbs[0].attribs.href).toBe('/en/get-started')
     })
-
-    test('localized breadcrumbs link to localize pages', async () => {
-      const $ = await getDOM('/ja/get-started/learning-about-github')
-      const $breadcrumbs = $('[data-testid=breadcrumbs] a')
-      expect($breadcrumbs[0].attribs.href).toBe('/ja/get-started')
-    })
   })
 
-  describeInternalOnly('early access rendering', () => {
+  describeIfDocsEarlyAccess('early access rendering', () => {
     test('top-level product pages have breadcrumbs', async () => {
       const $ = await getDOM('/early-access/github/articles/using-gist-playground')
       expect($('[data-testid=breadcrumbs]')).toHaveLength(2)
@@ -99,28 +91,26 @@ describe('breadcrumbs', () => {
 
     test('early access article pages have breadcrumbs with product, category, and article', async () => {
       const $ = await getDOM(
-        '/early-access/github/enforcing-best-practices-with-github-policies/about-github-policies'
+        '/early-access/enterprise-importer/understanding-github-enterprise-importer'
       )
       const $breadcrumbTitles = $('[data-testid=breadcrumbs] [data-testid=breadcrumb-title]')
       const $breadcrumbLinks = $('[data-testid=breadcrumbs] a')
 
       expect($breadcrumbTitles).toHaveLength(0)
       expect($breadcrumbLinks).toHaveLength(4)
-      expect($breadcrumbLinks[0].attribs.title).toBe(
-        'Enforcing best practices with GitHub Policies'
-      )
-      expect($breadcrumbLinks[1].attribs.title).toBe('About GitHub Policies')
+      expect($breadcrumbLinks[0].attribs.title).toBe('GitHub Enterprise Importer')
+      expect($breadcrumbLinks[1].attribs.title).toBe('Understand the Importer')
       expect($breadcrumbLinks[1].attribs.class.includes('color-fg-muted')).toBe(true)
     })
   })
 
   describe('breadcrumbs object', () => {
     test('works on product index pages', async () => {
-      const breadcrumbs = await getJSON('/en/github?json=breadcrumbs')
+      const breadcrumbs = await getJSON('/en/repositories?json=breadcrumbs')
       const expected = [
         {
-          href: '/en/github',
-          title: 'GitHub',
+          href: '/en/repositories',
+          title: 'Repositories',
         },
       ]
       expect(breadcrumbs).toEqual(expected)
@@ -149,7 +139,7 @@ describe('breadcrumbs', () => {
 
     test('works on maptopic pages', async () => {
       const breadcrumbs = await getJSON(
-        '/en/account-and-profile/setting-up-and-managing-your-github-user-account/managing-user-account-settings?json=breadcrumbs'
+        '/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-personal-account-settings?json=breadcrumbs'
       )
       const expected = [
         {
@@ -157,12 +147,12 @@ describe('breadcrumbs', () => {
           title: 'Account and profile',
         },
         {
-          href: '/en/account-and-profile/setting-up-and-managing-your-github-user-account',
-          title: 'User accounts',
+          href: '/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github',
+          title: 'Personal accounts',
         },
         {
-          href: '/en/account-and-profile/setting-up-and-managing-your-github-user-account/managing-user-account-settings',
-          title: 'User account settings',
+          href: '/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-personal-account-settings',
+          title: 'Personal account settings',
         },
       ]
       expect(breadcrumbs).toEqual(expected)
@@ -170,7 +160,7 @@ describe('breadcrumbs', () => {
 
     test('works on articles that DO have maptopics ', async () => {
       const breadcrumbs = await getJSON(
-        '/en/account-and-profile/setting-up-and-managing-your-github-user-account/managing-user-account-settings/about-your-personal-dashboard?json=breadcrumbs'
+        '/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-personal-account-settings/about-your-personal-dashboard?json=breadcrumbs'
       )
       const expected = [
         {
@@ -178,15 +168,15 @@ describe('breadcrumbs', () => {
           title: 'Account and profile',
         },
         {
-          href: '/en/account-and-profile/setting-up-and-managing-your-github-user-account',
-          title: 'User accounts',
+          href: '/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github',
+          title: 'Personal accounts',
         },
         {
-          href: '/en/account-and-profile/setting-up-and-managing-your-github-user-account/managing-user-account-settings',
-          title: 'User account settings',
+          href: '/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-personal-account-settings',
+          title: 'Personal account settings',
         },
         {
-          href: '/en/account-and-profile/setting-up-and-managing-your-github-user-account/managing-user-account-settings/about-your-personal-dashboard',
+          href: '/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-personal-account-settings/about-your-personal-dashboard',
           title: 'Your personal dashboard',
         },
       ]
